@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2>Assign Role</h2>
+
+<h3>User: @ViewBag.UserName</h3>
+
+<form asp-action="AssignRole" method="post">
+    <input type="hidden" name="userId" value="@ViewBag.UserId" />
+    <div class="form-group">
+        <label for="roleName">Select Role</label>
+        <select id="roleName" name="roleName" class="form-control">
+            @foreach (var role in ViewBag.Roles)
+            {
+                <option value="@role.Name">@role.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Assign Role</button>
+</form>
+
+<h3>Roles & Permissions</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userRole in ViewBag.UserRoles)
+        {
+            <tr>
+                <td>@userRole</td>
+                <td>
+                    <form asp-action="RemoveRole" method="post" style="display:inline;">
+                        <input type="hidden" name="userId" value="@ViewBag.UserId" />
+                        <input type="hidden" name="roleName" value="@userRole" />
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                    <button asp-controller="Admin" asp-action="AssignRole">Manage Permissions</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
