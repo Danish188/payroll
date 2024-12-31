@@ -1,0 +1,32 @@
+﻿<h2>Manage Permissions</h2>
+
+<form asp-controller="Admin" asp-action="ManagePermission" method="post">
+    <div class="form-group">
+        <label for="permissionName">Permission Name</label>
+        <input type="text" id="permissionName" name="permissionName" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Permission</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Permission</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var permission in Model)
+        {
+            <tr>
+                <td>@permission</td>
+                <td>
+                    <form asp-controller="Admin" asp-action="DeletePermission" method="post">
+                        <input type="hidden" name="permissionName" value="@permission" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

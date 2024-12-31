@@ -23,7 +23,14 @@
             <tr>
                 <td>@role.Name</td>
                 <td>
-                    <!-- Add additional actions if needed -->
+                    <form asp-controller="Admin" asp-action="ListPermissions" method="get">
+                        <input type="hidden" name="roleId" value="@role.Id" />
+                        <button type="submit" class="btn btn-primary">View Permissions</button>
+                    </form>
+                    <form asp-controller="Admin" asp-action="DeleteRole" method="post">
+                        <input type="hidden" name="roleId" value="@role.Id" />
+                        <button type="submit" class="btn btn-danger">Delete Role</button>
+                    </form>
                 </td>
             </tr>
         }

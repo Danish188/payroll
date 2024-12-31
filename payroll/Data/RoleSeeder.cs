@@ -11,9 +11,9 @@ namespace payroll.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var roles = new List<string> { "Admin", "User" };
 
-            foreach (var role in roles) 
+            foreach (var role in roles)
             {
-                if(!await roleManager.RoleExistsAsync(role))
+                if (!await roleManager.RoleExistsAsync(role))
                 {
                     await roleManager.CreateAsync(new IdentityRole(role));
                 }
@@ -26,12 +26,13 @@ namespace payroll.Data
 
             var adminEmail = "admin@gmail.com";
             var adminPassword = "Admin@123";
+            var userName = "Danish";
 
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
             if (adminUser == null)
             {
-                adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+                adminUser = new IdentityUser { UserName = userName, Email = adminEmail, EmailConfirmed = true };
                 await userManager.CreateAsync(adminUser, adminPassword);
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
