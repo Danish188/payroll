@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
 
@@ -92,21 +91,23 @@ namespace payroll.Controllers
                 return NotFound();
 
             var claims = await _roleManager.GetClaimsAsync(role);
-            var permissions = claims.Where(c => c.Type == "Permission").Select(c => c.Value).ToList();
+            var permissions = claims.Where(c => c.Type == "Permission").Select(s => s.Value).ToList();
+
+            ViewData["RoleId"] = roleId;
 
             return View(permissions);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ManagePermission(string permissionName, string roleName)
+        public async Task<IActionResult> CreatePermission(string permissionName, string roleId)
         {
-            if (string.IsNullOrEmpty(permissionName) || string.IsNullOrEmpty(roleName))
+            if (string.IsNullOrEmpty(permissionName) || string.IsNullOrEmpty(roleId))
             {
                 ModelState.AddModelError("", "Permission name and role are required.");
                 return View();
             }
 
-            var role = await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
             {
                 ModelState.AddModelError("", "Role not found.");
@@ -124,7 +125,45 @@ namespace payroll.Controllers
 
             await _roleManager.AddClaimAsync(role, new Claim("Permission", permissionName));
 
-            return RedirectToAction("ListPermissions");
+            return RedirectToAction("ManagePermission", new { roleId = roleId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> deletepermission(string roleId, string permissionName)
+        {
+            if (string.IsNullOrEmpty(roleId) || string.IsNullOrEmpty(permissionName))
+            {
+                ModelState.AddModelError("", "Role ID and Permission Name are required.");
+                return RedirectToAction("ManagePermission", new { roleId = roleId });
+            }
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                ModelState.AddModelError("", "Role not found.");
+                return RedirectToAction("ManagePermission", new { roleId = roleId });
+            }
+
+            var claims = await _roleManager.GetClaimsAsync(role);
+
+            var claimToRemove = claims.FirstOrDefault(c => c.Type == "Permission" && c.Value == permissionName);
+            if (claimToRemove == null)
+            {
+                ModelState.AddModelError("", "Permission not found.");
+                return RedirectToAction("ManagePermission", new { roleId = roleId });
+            }
+
+            var result = await _roleManager.RemoveClaimAsync(role, claimToRemove);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return RedirectToAction("ManagePermission", new { roleId = roleId });
+            }
+
+            return RedirectToAction("ManagePermission", new { roleId = roleId });
         }
     }
 }

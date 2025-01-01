@@ -1,6 +1,7 @@
-﻿<h2>Manage Permissions</h2>
+﻿<h2>Permissions</h2>
 
-<form asp-controller="Admin" asp-action="ManagePermission" method="post">
+<form asp-controller="Admin" asp-action="CreatePermission" method="post">
+    <input type="hidden" id="roleId" name="roleId" value="@ViewData["RoleId"]" />
     <div class="form-group">
         <label for="permissionName">Permission Name</label>
         <input type="text" id="permissionName" name="permissionName" class="form-control" required />
@@ -22,8 +23,9 @@
                 <td>@permission</td>
                 <td>
                     <form asp-controller="Admin" asp-action="DeletePermission" method="post">
+                        <input type="hidden" id="roleId" name="roleId" value="@ViewData["RoleId"]" />
                         <input type="hidden" name="permissionName" value="@permission" />
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">Remove</button>
                     </form>
                 </td>
             </tr>

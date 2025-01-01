@@ -23,7 +23,7 @@
             <tr>
                 <td>@role.Name</td>
                 <td>
-                    <form asp-controller="Admin" asp-action="ListPermissions" method="get">
+                    <form asp-controller="Admin" asp-action="ManagePermission" method="get">
                         <input type="hidden" name="roleId" value="@role.Id" />
                         <button type="submit" class="btn btn-primary">View Permissions</button>
                     </form>

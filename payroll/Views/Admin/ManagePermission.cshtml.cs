@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace payroll.Views.Admin
 {
-    public class ListPermissionsModel : PageModel
+    public class ListPermissionModel : PageModel
     {
         public void OnGet()
         {

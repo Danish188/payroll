@@ -11,6 +11,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<PayRollDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PermissionPolicy", policy =>
+        policy.RequireAssertion(context =>
+        {
+            var permission = context.Resource as string;
+            return context.User.HasClaim("Permission", permission);
+        }));
+});
+
 // Add services to the container.r
 builder.Services.AddControllersWithViews();
 
